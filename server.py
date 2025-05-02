@@ -69,10 +69,20 @@ class Server:
                 else:
                     self.state["errors"] += 1
                     return "Key not found"
-        elif cmd == "DELETE":
-            return self.delete(request)
-        else:
-            return "Invalid command"
+        elif cmd == "P":
+            self.state["PUTs"] += 1
+            key, value = request.split(" ")
+            if '' not in request:
+                self.state["errors"] += 1
+                return "Invalid PUT request"
+            key, value = request.split(" ")
+            with self.lock:
+                if key in self.tuple:
+                    self.state["errors"] += 1
+                    return "Key already exists"
+                else:
+                    self.tuple[key] = value
+                    return f"PUT {key} {value}"
 
     
 if __name__ == "__main__":
