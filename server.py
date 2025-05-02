@@ -56,7 +56,7 @@ class Server:
             key = request
             with self.lock:
                 if key in self.tuple:
-                    return f"READ {key} {value}"
+                    return f"READ {key} {self.tuples[key]}"
                 else:
                     self.state["errors"] += 1
                     return "Key not found"
