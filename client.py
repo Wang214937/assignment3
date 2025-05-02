@@ -53,6 +53,20 @@ class Client:
         header = f"{len(message):03d}"
         full_message = header + message
         self.sock.send(full_message.encode())
+        try:
+            response = self.sock.recv(1024).decode()
+            if not response:
+                print("No response from server")
+                return
+            response_len = int (header)
+            response = self.sock.recv(response_len).decode()
+            print(f"{command} {value}:{response}")
+        except Exception as e:
+            print(f"Error sending command: {e}")
+        finally:
+            self.client_socket.close()
+            sys.exit(1)
+            
         
             
 
