@@ -44,6 +44,16 @@ class Client:
                 self.client_socket.close()
                 sys.exit(1)     
     
-    
+
+    def send_command(self, command, value):
+        message = f"{command} {value}"
+        if len(message) > 999:
+            print(f"Message too long: {message}")
+            return
+        header = f"{len(message):03d}"
+        full_message = header + message
+        self.sock.send(full_message.encode())
+        
+            
 
        
