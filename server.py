@@ -17,3 +17,7 @@ class Server:
             "PUTs":0, 
             "errors":0
         }
+        self.start_sever (port)
+
+    def start_sever(self, port):
+        
