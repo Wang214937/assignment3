@@ -26,4 +26,12 @@ class Server:
         server_socket.bind((host, port))
         server_socket.listen()
         print("Server is running and ready to accept multiple client...")
-        
+        try:
+            while True:
+                client_socket, addr = server_socket.accept()
+                client_thread = threading.Thread(target=self.handle_client, args=(client_socket,addr))
+                client_thread.start()
+        except KeyboardInterrupt:
+            print("Server is shutting down...")
+        finally:
+            server_socket.close()
