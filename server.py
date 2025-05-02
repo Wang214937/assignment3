@@ -6,8 +6,14 @@ class Server:
         self.tuple = {}
         self.lock = threading.Lock()
         self.state = {
-            "reads":0,
-            "gets":0,
-            "puts":0,
-            "errs":0
+            "numtuples":0,
+            "avertuple":0,
+            "averkey":0,
+            "avervalue":0, #string 
+            "total_clients" :0,
+            "total_operations":0, 
+            "READs":0,
+            "GETs":0, 
+            "PUTs":0, 
+            "errors":0
         }
