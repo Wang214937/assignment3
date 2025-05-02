@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 class Server:
     def __init__(self, port):
@@ -86,6 +87,9 @@ class Server:
                     return f"PUT {key} {value}"
                 
     def print_stats(self):
+        while True:
+            time.sleep(10)
+
 
     
 if __name__ == "__main__":
