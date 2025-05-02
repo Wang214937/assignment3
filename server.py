@@ -50,6 +50,15 @@ class Server:
                 client_socket.close()
                 print(f"Client {addr} closed")
         
+    def process_request(self, cmd, request):
+        if cmd == "GET":
+            return self.get(request)
+        elif cmd == "PUT":
+            return self.put(request)
+        elif cmd == "DELETE":
+            return self.delete(request)
+        else:
+            return "Invalid command"
 
     
 if __name__ == "__main__":
