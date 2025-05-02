@@ -18,6 +18,7 @@ class Server:
             "errors":0
         }
         self.start_sever (port)
+        threading.Thread(target=self.print_stats, daemon=True).start()
 
     def start_sever(self, port):
         host = 'localhost'
@@ -83,6 +84,8 @@ class Server:
                 else:
                     self.tuple[key] = value
                     return f"PUT {key} {value}"
+                
+    def print_stats(self):
 
     
 if __name__ == "__main__":
