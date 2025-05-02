@@ -30,12 +30,14 @@ class Client:
                 if command not in ["R", "G", "P"]:
                     print(f"Invalid command: {command}")
                     continue
-                if command == "R":
-                    self.handle_read(request[1:])
-                elif command == "G":    
-                    self.handle_get(request[1:])
-                elif command == "P":
-                    self.handle_put(request[1:])
+                if command == "R" | command == "G":
+                    if len(parts) != 2:
+                        print(f"Invalid READ request: {request}")
+                        continue
+                    self.send_command(command[0],parts[1])
+                else :
+                    print(f"Invalid command: {command}")
+                    continue
             except Exception as e:
                 print(f"Error processing request: {e}")
             finally:
