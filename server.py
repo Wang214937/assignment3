@@ -89,6 +89,18 @@ class Server:
     def print_stats(self):
         while True:
             time.sleep(10)
+            total = self.state["total_operations"]
+            print(f"Total tuples: {total}")
+            print(f"Currrent tuples: {self.state['numtuples']}")
+            print(f"Average tuple size: {self.state['avertuple'] / total}")
+            print(f"Average key size: {self.state['averkey'] / total}")
+            print(f"Average value size: {self.state['avervalue'] / total}")
+            print(f"Total clients: {self.state['total_clients']}")
+            print(f"Total operations: {self.state['total_operations']}")
+            print(f"READs: {self.state['READs']}")
+            print(f"GETs: {self.state['GETs']}")
+            print(f"PUTs: {self.state['PUTs']}")
+            print(f"Errors: {self.state['errors']}")
 
 
     
