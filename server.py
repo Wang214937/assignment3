@@ -38,6 +38,13 @@ class Server:
 
     def handle_client(self,client_socket, addr):
         print(f"New client connected from {addr}")
+        while True:
+            try:
+                message = client_socket.recv(3).decode()
+                print(f"client says: {message}")
+                response = "Message received"
+                client_socket.send(response.encode('utf-8'))
+            
         
 
     
