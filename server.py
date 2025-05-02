@@ -44,7 +44,11 @@ class Server:
                 print(f"client says: {message}")
                 response = "Message received"
                 client_socket.send(response.encode('utf-8'))
-            
+            except Exception as e:
+                print(f"Error handling client{addr}: {e}" )
+            finally:
+                client_socket.close()
+                print(f"Client {addr} closed")
         
 
     
