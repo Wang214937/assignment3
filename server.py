@@ -20,4 +20,10 @@ class Server:
         self.start_sever (port)
 
     def start_sever(self, port):
+        host = 'localhost'
+        port = port
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind((host, port))
+        server_socket.listen()
+        print("Server is running and ready to accept multiple client...")
         
