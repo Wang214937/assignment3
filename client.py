@@ -66,7 +66,12 @@ class Client:
         finally:
             self.client_socket.close()
             sys.exit(1)
-            
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python client.py <host> <port> <file_path>")
+        sys.exit(1)
+    Client(sys.argv[1], int(sys.argv[2]), sys.argv[3]).process_requests()
         
             
 
