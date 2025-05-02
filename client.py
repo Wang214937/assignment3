@@ -10,7 +10,17 @@ class Client:
             print(f"Error: File {file_path} not found.")
             sys.exit(1)
 
+        try:
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.connect((host, port))
+        except Exception as e:
+            print(f"Error connecting to server: {e}")
+        finally:
+            client_socket.close()
+            sys.exit(1)
 
+    
+    
     
 
        
