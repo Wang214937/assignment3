@@ -35,4 +35,11 @@ class Server:
             print("Server is shutting down...")
         finally:
             server_socket.close()
+
+    def handle_client(self,client_socket, addr):
+        print(f"New client connected from {addr}")
+        
+
     
+if __name__ == "__main__":
+    start_sever = Server()
