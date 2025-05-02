@@ -51,8 +51,15 @@ class Server:
                 print(f"Client {addr} closed")
         
     def process_request(self, cmd, request):
-        if cmd == "GET":
-            return self.get(request)
+        if cmd == "R":
+            SELF.state["READs"] += 1
+            key = request
+            with self.lock:
+                if key in self.tuple:
+                    return f"READ {key} {value}"
+                else:
+                    self.state["errors"] += 1
+                    return "Key not found"
         elif cmd == "PUT":
             return self.put(request)
         elif cmd == "DELETE":
