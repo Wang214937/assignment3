@@ -52,7 +52,7 @@ class Server:
         
     def process_request(self, cmd, request):
         if cmd == "R":
-            SELF.state["READs"] += 1
+            self.state["READs"] += 1
             key = request
             with self.lock:
                 if key in self.tuple:
@@ -60,8 +60,15 @@ class Server:
                 else:
                     self.state["errors"] += 1
                     return "Key not found"
-        elif cmd == "PUT":
-            return self.put(request)
+        elif cmd == "G":
+            self.state["GETs"] += 1
+            key = request
+            with self.lock:
+                if key in self.tuple:
+                    value = self.tuple.pop[key]
+                else:
+                    self.state["errors"] += 1
+                    return "Key not found"
         elif cmd == "DELETE":
             return self.delete(request)
         else:
