@@ -24,13 +24,13 @@ class Client:
 
     def process_requests(self):
         for request in self.requests:
-            parts = request.split().split(maxsplit=2)
+            parts = request.strip().split(maxsplit=2)
             if not parts:
                 continue
             cmd_map = {
-                "P": "PUT",
-                "G": "GET",
-                "R": "REMOVE"
+                "PUT": "P",
+                "GET": "G",
+                "READ": "R"
             }
             
             cmd_str = parts[0]
