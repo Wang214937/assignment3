@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import sys
 
 class Server:
     def __init__(self, port):
@@ -126,4 +127,7 @@ class Server:
 
     
 if __name__ == "__main__":
-    start_sever = Server()
+    if len(sys.argv) != 2:
+        print("Usage: python server.py <port>")
+        sys.exit(1)
+    Server(int(sys.argv[1]))
