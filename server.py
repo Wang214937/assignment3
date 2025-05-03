@@ -4,14 +4,14 @@ import time
 import sys
 
 class Server:
-    def __init__(self, port):
+    def __init__(self):
         self.tuple = {}
         self.lock = threading.Lock()
         self.state = {
             "numtuples":0,
             "avertuple":0,
             "averkey":0,
-            "avervalue":0, #string 
+            "avervalue":0,      #string 
             "total_clients" :0,
             "total_operations":0, 
             "READs":0,
@@ -19,12 +19,12 @@ class Server:
             "PUTs":0, 
             "errors":0
         }
-        self.start_server (port)
+        self.start_server ()
         threading.Thread(target=self.print_stats, daemon=True).start()
 
-    def start_server(self, port):
+    def start_server(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(('', port))
+        server_socket.bind(('localhost', 51234))
         server_socket.listen()
         print("Server is running and ready to accept multiple client...")
         try:
