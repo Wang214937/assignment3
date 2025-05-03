@@ -78,7 +78,7 @@ class Server:
                     key = request
                     if key in self.tuple:
                         value = self.tuple[key]
-                        response = f"READ {key} {value}"
+                        response = f"OK {key} {value} readed"
                         self.state["READs"] += 1
                     else:
                         response = f"Err{key} does not exist"
@@ -117,10 +117,11 @@ class Server:
                                 self.state["avertuple"] += len(key) + len(value)
                                 self.state["averkey"] += len(key)
                                 self.state["avervalue"] += len(value)
+                return response
         except Exception as e:
             self.state["errors"] += 1
             response = f"Error processing request: {e}"
-        return response
+        
         
                 
     def print_stats(self):
