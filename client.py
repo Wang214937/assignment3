@@ -3,6 +3,10 @@ import sys
 
 class Client:
     def __init__(self, host, port,file_path):
+        self.host = host
+        self.port = port
+        self.file_path = file_path
+        self.sock = None
         try:
             with open(file_path) as file:
                 self.requests = [line.strip() for line in file.readlines() if line.strip()]
@@ -13,11 +17,12 @@ class Client:
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client_socket.connect((host, port))
+            self.process_requests()
         except Exception as e:
             print(f"Error connecting to server: {e}")
         finally:
             client_socket.close()
-            sys.exit(1)
+
 
     def process_requests(self):
         for request in self.requests:
