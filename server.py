@@ -76,7 +76,7 @@ class Server:
                     if key in self.tuple:
                         value = self.tuple.pop[key]
                         self.state["numtuples"] -= 1
-                        self.state["avertuple"] -= len(key)+len(value)
+                        self.state["avertuple"] -= (len(key)+len(value))
                         self.state["averkey"] -= len(key)
                         self.state["avervalue"] -= len(value)
                         response = f"GET {key} {value},and deleted from the tuple"
@@ -85,10 +85,10 @@ class Server:
                         self.state["errors"] += 1
             elif cmd == "P":
                 self.state["PUTs"] += 1
-                if '' not in request:
+                if ' ' not in request:
                     self.state["errors"] += 1
                     response = "Invalid PUT request"
-                key, value = request.split(" ")
+                key, value = request.split(" ",1)
                 with self.lock:
                     if key in self.tuple:
                         self.state["errors"] += 1
