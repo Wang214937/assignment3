@@ -51,38 +51,58 @@ class Server:
             print(f"Connection closed")
         
     def process_request(self, cmd, request):
-        if cmd == "R":
-            self.state["READs"] += 1
-            key = request
-            with self.lock:
-                if key in self.tuple:
-                    return f"READ {key} {self.tuples[key]}"
-                else:
+        self.state["total_operations"] += 1
+        response = ""
+        try:
+            if cmd == "R":
+                self.state["READs"] += 1
+                key = request
+                with self.lock:
+                    if key in self.tuple:
+                        value = self.tuple[key]
+                        response = f"READ {key} {value}"
+                    else:
+                        response = "Key not found"
+                        self.state["errors"] += 1
+            elif cmd == "G":
+                self.state["GETs"] += 1
+                key = request
+                with self.lock:
+                    if key in self.tuple:
+                        value = self.tuple.pop[key]
+                        self.state["numtuples"] -= 1
+                        self.state["avertuple"] -= len(key)+len(value)
+                        self.state["averkey"] -= len(key)
+                        self.state["avervalue"] -= len(value)
+                        response = f"GET {key} {value},and deleted from the tuple"
+                    else:
+                        response = "Key not found"
+                        self.state["errors"] += 1
+            elif cmd == "P":
+                self.state["PUTs"] += 1
+                if '' not in request:
                     self.state["errors"] += 1
-                    return "Key not found"
-        elif cmd == "G":
-            self.state["GETs"] += 1
-            key = request
-            with self.lock:
-                if key in self.tuple:
-                    value = self.tuple.pop[key]
-                else:
-                    self.state["errors"] += 1
-                    return "Key not found"
-        elif cmd == "P":
-            self.state["PUTs"] += 1
-            key, value = request.split(" ")
-            if '' not in request:
+                    response = "Invalid PUT request"
+                key, value = request.split(" ")
+                with self.lock:
+                    if key in self.tuple:
+                        self.state["errors"] += 1
+                        response = "Key already exists"
+                    else:
+                        self.tuple[key] = value
+                        self.state["numtuples"] += 1
+                        self.state["avertuple"] += len(key) + len(value)
+                        self.state["averkey"] += len(key)
+                        self.state["avervalue"] += len(value)
+                        response = f"PUT {key} {value}"
+            else:
                 self.state["errors"] += 1
-                return "Invalid PUT request"
-            key, value = request.split(" ")
-            with self.lock:
-                if key in self.tuple:
-                    self.state["errors"] += 1
-                    return "Key already exists"
-                else:
-                    self.tuple[key] = value
-                    return f"PUT {key} {value}"
+                response = "Invalid command"
+        except Exception as e:
+            self.state["errors"] += 1
+            response = f"Error processing request: {e}"
+        return response
+        
                 
     def print_stats(self):
         while True:
