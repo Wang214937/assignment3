@@ -20,8 +20,6 @@ class Client:
             self.process_requests()
         except Exception as e:
             print(f"Error connecting to server: {e}")
-        finally:
-            client_socket.close()
 
 
     def process_requests(self):
@@ -47,8 +45,6 @@ class Client:
                     print(f"Unknown command: {command}")
             except Exception as e:
                 print(f"Error processing request: {e}")
-            finally:
-                sys.exit(1)     
     
 
     def send_command(self, command, value):
