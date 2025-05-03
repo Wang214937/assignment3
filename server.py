@@ -31,7 +31,7 @@ class Server:
             while True:
                 client_socket, addr = server_socket.accept()
                 self.state["total_clients"] += 1
-                client_thread = threading.Thread(target=self.handle_client, args=(client_socket,addr))
+                client_thread = threading.Thread(target=self.handle_client, args=(client_socket,))
                 client_thread.start()
         except KeyboardInterrupt:
             print("Server is shutting down...")
