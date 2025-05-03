@@ -78,16 +78,16 @@ class Server:
                     key = request
                     if key in self.tuple:
                         value = self.tuple[key]
-                        response = f"OK {key} {value} readed"
+                        response = f"OK ({key} {value}) read"
                         self.state["READs"] += 1
                     else:
-                        response = f"Err{key} does not exist"
+                        response = f"ERR {key} does not exist"
                         self.state["errors"] += 1
                 elif cmd == "G":
                     key = request
                     if key in self.tuple:
                         value = self.tuple.pop(key)
-                        response = f"OK {key} {value} removed"
+                        response = f"OK ({key} {value}) removed"
                         self.state["GETs"] += 1
 
                         self.state["numtuples"] -= 1
@@ -95,28 +95,28 @@ class Server:
                         self.state["averkey"] -= len(key)
                         self.state["avervalue"] -= len(value)             
                     else:
-                        response = f"Err{key} does not exist"
+                        response = f"ERR {key} does not exist"
                         self.state["errors"] += 1
                 elif cmd == "P":            
-                        if ' ' not in request:
+                    if ' ' not in request:
+                        self.state["errors"] += 1
+                        response = "ERR invalid format"
+                    else:
+                        key, value = request.split(" ",1)
+                        if len(key) +len(value) > 970 :
+                            response = "ERR size exceeded"
                             self.state["errors"] += 1
-                            response = "ERR invalid format"
+                        elif key in self.tuple:
+                            response = f"ERR {key} already exists"
+                            self.state["errors"] += 1
                         else:
-                            key, value = request.split(" ",1)
-                            if len(key) +len(value) > 970 :
-                                response = "ERR size exceeded"
-                                self.state["errors"] += 1
-                            elif key in self.tuple:
-                                response = f"Err{key} already exists"
-                                self.state["errors"] += 1
-                            else:
-                                self.tuple[key] = value
-                                response = f"OK {key} {value} added"
-                                self.state["PUTs"] += 1
-                                self.state["numtuples"] += 1
-                                self.state["avertuple"] += len(key) + len(value)
-                                self.state["averkey"] += len(key)
-                                self.state["avervalue"] += len(value)
+                            self.tuple[key] = value
+                            response = f"OK ({key} {value}) added"
+                            self.state["PUTs"] += 1
+                            self.state["numtuples"] += 1
+                            self.state["avertuple"] += len(key) + len(value)
+                            self.state["averkey"] += len(key)
+                            self.state["avervalue"] += len(value)
                 return response
         except Exception as e:
             self.state["errors"] += 1
