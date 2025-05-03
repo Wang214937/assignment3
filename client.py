@@ -24,11 +24,19 @@ class Client:
 
     def process_requests(self):
         for request in self.requests:
-            parts = request.split(' ', 2)
-            if len(parts) < 2:
-                print(f"Invalid request format: {request}")
+            cmd_map = {
+                "P": "PUT",
+                "G": "GET",
+                "R": "REMOVE"
+            }
+            parts = request.split().split(maxsplit=2)
+            if not parts:
                 continue
-            command = parts[0]
+            cmd_str = parts[0]
+            if cmd_str not in cmd_map:
+                print(f"Unknown command: {cmd_str}")
+                continue
+            command = cmd_map[cmd_str]
             try:
                 if command == "P":
                     if len(parts) != 3:
@@ -57,12 +65,12 @@ class Client:
             full_message = header + message.encode('utf-8')
             self.client_socket.send(full_message)
 
-            response = self.sock.recv(3).decode('utf-8')
+            response = self.client_socket.recv(3).decode('utf-8')
             if not response:
                 print("No response from server")
                 return
             response_len = int (response)
-            response = self.sock.recv(response_len).decode('utf-8')
+            response = self.client_socket.recv(response_len).decode('utf-8')
             print(f"{command} {value}:{response}")
         except Exception as e:
             print(f"Error sending command: {e}")
