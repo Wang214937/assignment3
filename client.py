@@ -53,20 +53,21 @@ class Client:
     
 
     def send_command(self, command, value):
-        message = f"{command} {value}"
-        if len(message) > 999:
-            print(f"Message too long: {message}")
-            return
-        header = f"{len(message):03d}"
-        full_message = header + message
-        self.sock.send(full_message.encode())
         try:
-            response = self.sock.recv(1024).decode()
+            message = f"{command} {value}"
+            if len(message) > 999:
+                print(f"Message too long: {message}")
+                return
+            header = f"{len(message):03d}".encode('utf-8')
+            full_message = header + message.encode('utf-8')
+            self.sock.send(full_message)
+
+            response = self.sock.recv(3).decode('utf-8')
             if not response:
                 print("No response from server")
                 return
-            response_len = int (header)
-            response = self.sock.recv(response_len).decode()
+            response_len = int (header.decode('utf-8'))
+            response = self.sock.recv(response_len).decode('utf-8')
             print(f"{command} {value}:{response}")
         except Exception as e:
             print(f"Error sending command: {e}")
