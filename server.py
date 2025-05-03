@@ -30,14 +30,16 @@ class Server:
     def start_server(self):
         try:
             while True:
-                client_socket, addr = server_socket.accept()
-                self.state["total_clients"] += 1
+                client_socket, addr = self.server_socket.accept()
+                print(f"New connection from {addr}")
+                with self.lock:
+                    self.state["total_clients"] += 1
                 client_thread = threading.Thread(target=self.handle_client, args=(client_socket,))
                 client_thread.start()
         except KeyboardInterrupt:
             print("Server is shutting down...")
         finally:
-            server_socket.close()
+            self.server_socket.close()
 
     def handle_client(self,client_socket):
         try:
