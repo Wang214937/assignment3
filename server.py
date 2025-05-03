@@ -64,7 +64,7 @@ class Server:
                 key = request
                 with self.lock:
                     if key in self.tuple:
-                        value = self.tuple(key)
+                        value = self.tuple[key]
                         response = f"READ {key} {value}"
                     else:
                         response = "Key not found"
@@ -74,7 +74,7 @@ class Server:
                 key = request
                 with self.lock:
                     if key in self.tuple:
-                        value = self.tuple.pop[key]
+                        value = self.tuple.pop(key)
                         self.state["numtuples"] -= 1
                         self.state["avertuple"] -= (len(key)+len(value))
                         self.state["averkey"] -= len(key)
