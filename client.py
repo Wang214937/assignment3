@@ -51,11 +51,11 @@ class Client:
         try:
             message = f"{command}{value}"
             if len(message) > 999:
-                print(f"Message too long: {message}")
+                print(f"Message too long: {message[:10]}")
                 return
             header = f"{len(message):03d}".encode('utf-8')
             full_message = header + message.encode('utf-8')
-            self.sock.send(full_message)
+            self.client_socket.send(full_message)
 
             response = self.sock.recv(3).decode('utf-8')
             if not response:
