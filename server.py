@@ -47,7 +47,7 @@ class Server:
                 cmd, request = full_message[0], full_message[1:]
                 print(f"client says: {message}")
                 response = self.process_request(cmd, request)
-                response_message = f"{len(response):03d}.encode('utf-8') + response.encode('utf-8')"
+                response_message = f"{len(response):03d}".encode('utf-8') + response.encode('utf-8')
                 client_socket.send(response_message)
         except Exception as e:
             print(f"Error handling client: {e}" )
