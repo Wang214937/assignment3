@@ -48,8 +48,9 @@ class Server:
                 if len(header) != 3:
                     break
                 try:
-                    message_length = int(header.decode('utf-8'))
+                    message_length = int(header.decode())
                 except ValueError:
+                    print(f"Invalid header: {header}")
                     break
                 full_message = b''
                 remaining_length = message_length
