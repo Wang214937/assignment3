@@ -6,7 +6,7 @@ class Client:
         self.host = host
         self.port = port
         self.file_path = file_path
-        self.sock = None
+        self.client_socket = None
         try:
             with open(file_path) as file:
                 self.requests = [line.strip() for line in file.readlines() if line.strip()]
@@ -15,8 +15,8 @@ class Client:
             sys.exit(1)
 
         try:
-            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client_socket.connect((host, port))
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.connect((host, port))
             self.process_requests()
         except Exception as e:
             print(f"Error connecting to server: {e}")
@@ -48,13 +48,12 @@ class Client:
             except Exception as e:
                 print(f"Error processing request: {e}")
             finally:
-                self.client_socket.close()
                 sys.exit(1)     
     
 
     def send_command(self, command, value):
         try:
-            message = f"{command} {value}"
+            message = f"{command}{value}"
             if len(message) > 999:
                 print(f"Message too long: {message}")
                 return
@@ -66,13 +65,12 @@ class Client:
             if not response:
                 print("No response from server")
                 return
-            response_len = int (header.decode('utf-8'))
+            response_len = int (response)
             response = self.sock.recv(response_len).decode('utf-8')
             print(f"{command} {value}:{response}")
         except Exception as e:
             print(f"Error sending command: {e}")
         finally:
-            self.client_socket.close()
             sys.exit(1)
 
 if __name__ == "__main__":
