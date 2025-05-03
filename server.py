@@ -134,6 +134,7 @@ class Server:
     def print_stats(self):
         while True:
             time.sleep(10)
+            print("----------------------------------------")
             print(f"Currrent tuples: {self.state['numtuples']}")
             if self.state["numtuples"] > 0:
                 print(f"Average tuple size: {self.state['avertuple'] / self.state['numtuples']:.2f}")
