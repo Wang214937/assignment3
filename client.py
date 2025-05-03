@@ -24,14 +24,15 @@ class Client:
 
     def process_requests(self):
         for request in self.requests:
+            parts = request.split().split(maxsplit=2)
+            if not parts:
+                continue
             cmd_map = {
                 "P": "PUT",
                 "G": "GET",
                 "R": "REMOVE"
             }
-            parts = request.split().split(maxsplit=2)
-            if not parts:
-                continue
+            
             cmd_str = parts[0]
             if cmd_str not in cmd_map:
                 print(f"Unknown command: {cmd_str}")
@@ -39,7 +40,7 @@ class Client:
             command = cmd_map[cmd_str]
             try:
                 if command == "P":
-                    if len(parts) != 3:
+                    if len(parts) < 3:
                         print(f"Invalid PUT request: {request}")
                         continue
                     key, value = parts[1], parts[2]
@@ -74,15 +75,11 @@ class Client:
             print(f"{command} {value}:{response}")
         except Exception as e:
             print(f"Error sending command: {e}")
-        finally:
-            sys.exit(1)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print("Usage: python client.py <host> <port> <file_path>")
         sys.exit(1)
     Client(sys.argv[1], int(sys.argv[2]), sys.argv[3])
-        
-            
-
        
