@@ -37,19 +37,18 @@ class Server:
         finally:
             server_socket.close()
 
-    def handle_client(self,client_socket, addr):
-        print(f"New client connected from {addr}")
-        while True:
-            try:
-                message = client_socket.recv(3).decode()
+    def handle_client(self,client_socket):
+        try:
+            while True:
+                message = client_socket.recv(3).decode('utf-8')
                 print(f"client says: {message}")
                 response = "Message received"
                 client_socket.send(response.encode('utf-8'))
-            except Exception as e:
-                print(f"Error handling client{addr}: {e}" )
-            finally:
-                client_socket.close()
-                print(f"Client {addr} closed")
+        except Exception as e:
+            print(f"Error handling client: {e}" )
+        finally:
+            client_socket.close()
+            print(f"Connection closed")
         
     def process_request(self, cmd, request):
         if cmd == "R":
