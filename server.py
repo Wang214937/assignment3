@@ -19,14 +19,15 @@ class Server:
             "PUTs":0, 
             "errors":0
         }
-        self.start_server ()
-        threading.Thread(target=self.print_stats(), daemon=True).start()
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server_socket.bind(('0.0.0.0', port))
+        self.server_socket.listen(5)
+        print(f"Server listening on port {port}")
+        threading.Thread(target=self.print_stats, daemon=True).start()
+        self.start_server()
 
-    def start_server(self,host = '127.0.0.1', port = 51234):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((host, port ))
-        server_socket.listen()
-        print("Server is running and ready to accept multiple client...")
+    def start_server(self):
         try:
             while True:
                 client_socket, addr = server_socket.accept()
