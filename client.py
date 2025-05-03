@@ -2,7 +2,7 @@ import socket
 import sys
 
 class Client:
-    def __init__(self, host, port,file_path):
+    def __init__(self,host,port,file_path):
         self.host = host
         self.port = port
         self.file_path = file_path
@@ -16,7 +16,7 @@ class Client:
 
         try:
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.client_socket.connect((host, port))
+            self.client_socket.connect((self.host, self.port))
             self.process_requests()
         except Exception as e:
             print(f"Error connecting to server: {e}")
@@ -82,4 +82,3 @@ if __name__ == "__main__":
         print("Usage: python client.py <host> <port> <file_path>")
         sys.exit(1)
     Client(sys.argv[1], int(sys.argv[2]), sys.argv[3])
-       
