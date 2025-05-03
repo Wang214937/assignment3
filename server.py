@@ -52,19 +52,22 @@ class Server:
                 except ValueError:
                     print(f"Invalid header: {header}")
                     break
-                full_message = b''
-                remaining_length = message_length
-                while remaining_length > 0:
-                    chunk = client_socket.recv(remaining_length)
+                chunks = []
+                bytes_received = 0
+                while bytes_received < message_length:
+                    chunk = client_socket.recv(min(message_length - bytes_received, 4096))
                     if not chunk:
                         break
-                    full_message += chunk
-                    remaining_length -= len(chunk)
-                if remaining_length > 0:
+                    chunks.append(chunk)
+                    bytes_received += len(chunk)
+                if bytes_received != message_length:
+                    print(f"Incomplete message (expected {message_length}, got {bytes_received})")
                     break
-                cmd, request = full_message.decode('utf-8')[0], full_message.decode('utf-8')[1:]
+                full_message = b''.join(chunks).decode()
+                cmd = full_message[0]
+                request = full_message[1:]
                 response = self.process_request(cmd, request)
-                response_message = f"{len(response):03d}{response}".encode('utf-8')
+                response_message = f"{len(response):03d}{response}".encode()
                 client_socket.sendall(response_message)
         except Exception as e:
             print(f"Error handling client: {e}" )
