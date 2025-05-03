@@ -18,19 +18,18 @@ class Server:
             "PUTs":0, 
             "errors":0
         }
-        self.start_sever (port)
+        self.start_server (port)
         threading.Thread(target=self.print_stats, daemon=True).start()
 
-    def start_sever(self, port):
-        host = 'localhost'
-        port = port
+    def start_server(self, port):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((host, port))
+        server_socket.bind(('', port))
         server_socket.listen()
         print("Server is running and ready to accept multiple client...")
         try:
             while True:
                 client_socket, addr = server_socket.accept()
+                self.state["total_clients"] += 1
                 client_thread = threading.Thread(target=self.handle_client, args=(client_socket,addr))
                 client_thread.start()
         except KeyboardInterrupt:
