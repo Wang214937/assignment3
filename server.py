@@ -41,14 +41,27 @@ class Server:
     def handle_client(self,client_socket):
         try:
             while True:
-                message = client_socket.recv(3).decode('utf-8')
-                message_length = int(message)
-                full_message = client_socket.recv(message_length).decode('utf-8')
-                cmd, request = full_message[0], full_message[1:]
-                print(f"client says: {message}")
+                header = client_socket.recv(3)
+                if len(header) != 3:
+                    break
+                try:
+                    message_length = int(header.decode('utf-8'))
+                except ValueError:
+                    break
+                full_message = b''
+                remaining_length = message_length
+                while remaining_length > 0:
+                    chunk = client_socket.recv(remaining_length)
+                    if not chunk:
+                        break
+                    full_message += chunk
+                    remaining_length -= len(chunk)
+                if remaining_length > 0:
+                    break
+                cmd, request = full_message.decode('utf-8')[0], full_message.decode('utf-8')[1:]
                 response = self.process_request(cmd, request)
-                response_message = f"{len(response):03d}".encode('utf-8') + response.encode('utf-8')
-                client_socket.send(response_message)
+                response_message = f"{len(response):03d}{response}".encode('utf-8')
+                client_socket.sendall(response_message)
         except Exception as e:
             print(f"Error handling client: {e}" )
         finally:
