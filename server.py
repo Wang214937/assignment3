@@ -142,7 +142,4 @@ class Server:
 
     
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python server.py <port>")
-        sys.exit(1)
-    Server(int(sys.argv[1]))
+    Server()
