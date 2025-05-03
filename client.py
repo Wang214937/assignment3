@@ -32,17 +32,19 @@ class Client:
                 continue
             command = parts[0]
             try:
-                if command not in ["R", "G", "P"]:
-                    print(f"Invalid command: {command}")
-                    continue
-                if command == "R" | command == "G":
-                    if len(parts) != 2:
-                        print(f"Invalid READ request: {request}")
+                if command == "P":
+                    if len(parts) != 3:
+                        print(f"Invalid PUT request: {request}")
                         continue
-                    self.send_command(command[0],parts[1])
-                else :
-                    print(f"Invalid command: {command}")
-                    continue
+                    key, value = parts[1], parts[2]
+                    if len(key) > 999 or len(value) > 999:
+                        print(f"Key or value too long: {key}, {value}")
+                        continue
+                    self.send_command(command, f"{key} {value}")
+                elif command == "G" or command == "R":
+                    self.send_command(command, parts[1])
+                else:
+                    print(f"Unknown command: {command}")
             except Exception as e:
                 print(f"Error processing request: {e}")
             finally:
