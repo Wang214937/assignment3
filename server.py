@@ -60,9 +60,9 @@ class Server:
         response = ""
         try:
             if cmd == "R":
-                self.state["READs"] += 1
-                key = request
                 with self.lock:
+                    self.state["READs"] += 1
+                    key = request
                     if key in self.tuple:
                         value = self.tuple[key]
                         response = f"READ {key} {value}"
@@ -70,9 +70,9 @@ class Server:
                         response = "Key not found"
                         self.state["errors"] += 1
             elif cmd == "G":
-                self.state["GETs"] += 1
-                key = request
                 with self.lock:
+                    self.state["GETs"] += 1
+                    key = request
                     if key in self.tuple:
                         value = self.tuple.pop(key)
                         self.state["numtuples"] -= 1
@@ -84,12 +84,12 @@ class Server:
                         response = "Key not found"
                         self.state["errors"] += 1
             elif cmd == "P":
-                self.state["PUTs"] += 1
-                if ' ' not in request:
-                    self.state["errors"] += 1
-                    response = "Invalid PUT request"
-                key, value = request.split(" ",1)
                 with self.lock:
+                    self.state["PUTs"] += 1
+                    if ' ' not in request:
+                        self.state["errors"] += 1
+                        response = "Invalid PUT request"
+                    key, value = request.split(" ",1)
                     if key in self.tuple:
                         self.state["errors"] += 1
                         response = "Key already exists"
