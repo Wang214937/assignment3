@@ -149,4 +149,14 @@ class Server:
 
     
 if __name__ == "__main__":
-    Server()
+    if len(sys.argv) != 2:
+        print("Usage: python server.py <port>")
+        sys.exit(1)
+    try:
+        port = int(sys.argv[1])
+        if not (50000 <= port <= 59999):
+            raise ValueError
+    except ValueError:
+        print("Port must be between 50000 and 59999")
+        sys.exit(1)
+    Server(port)
